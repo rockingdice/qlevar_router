@@ -136,14 +136,10 @@ class RoutesTree {
   MatchRoute _getMatch(String path) {
     final newRoute = Uri.parse(path).pathSegments;
 
-    // InitalRoute `/`
-    if (newRoute.isEmpty) {
-      return MatchRoute.fromTree(routes: _routes, path: '');
-    }
-
     // Build Match Base
     var searchIn = _routes;
-    final match = MatchRoute.fromTree(routes: searchIn, path: newRoute[0]);
+    final match = MatchRoute.fromTree(
+        routes: searchIn, path: newRoute.isEmpty ? '' : newRoute[0]);
     if (!match.found) return _notFound(path);
     searchIn = match.route.children;
 
@@ -233,13 +229,17 @@ class _QRoute {
       this.onDispose,
       this.fullPath});
 
-  _QRoute copyWith({String name, String path, String fullPath}) => _QRoute(
-      fullPath: fullPath ?? this.fullPath,
-      name: name ?? this.name,
-      path: path ?? this.path,
-      page: page,
-      redirectGuard: redirectGuard,
-      isComponent: isComponent);
+  _QRoute copyWith({String name, String path, String fullPath}) {
+    final result = _QRoute(
+        fullPath: fullPath ?? this.fullPath,
+        name: name ?? this.name,
+        path: path ?? this.path,
+        page: page,
+        redirectGuard: redirectGuard,
+        isComponent: isComponent);
+    result.children.addAll(children);
+    return result;
+  }
 
   bool get hasChidlren => children != null && children.isNotEmpty;
 

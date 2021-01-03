@@ -167,7 +167,7 @@ if you need to route to new page simply
 
 ```dart
 
-  // white the path to the page
+  // write the path to the page
   QR.to('/dashboard/items');
 
   // OR
@@ -177,7 +177,7 @@ if you need to route to new page simply
   QR.toName('Item Page', params:{'itemId':3})
 ```
 
-and QR is clever enough to know with `Router` he should update.
+and QR is clever enough to know which `Router` he should update.
 
 want to go back
 

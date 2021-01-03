@@ -16,6 +16,8 @@ class _QRContext {
   bool enableDebugLog = false;
   final RoutesTree _routesTree = RoutesTree();
 
+  Map<String, dynamic> get params => currentRoute.params;
+
   /// list of string for the paths that has been called.
   final history = <String>[];
 
