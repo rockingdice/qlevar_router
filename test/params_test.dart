@@ -21,11 +21,11 @@ void main() {
     QR.to('/tow?param1=45&param2=not');
     await tester.pumpAndSettle();
     expect(QR.currentRoute.fullPath, '/tow?param1=45&param2=not');
-    expect(QR.params['param1'], '45');
-    expect(QR.params['param2'], 'not');
+    expect(QR.params!['param1'], '45');
+    expect(QR.params!['param2'], 'not');
     QR.back();
     await tester.pumpAndSettle();
-    expect(QR.params.length, 0);
+    expect(QR.params!.length, 0);
   });
 
   testWidgets("compoent test", (tester) async {
@@ -44,10 +44,10 @@ void main() {
     QR.to('/5');
     await tester.pumpAndSettle();
     expect(QR.currentRoute.fullPath, '/5');
-    expect(QR.params['userId'], '5');
+    expect(QR.params!['userId'], '5');
     QR.back();
     await tester.pumpAndSettle();
-    expect(QR.params.length, 0);
+    expect(QR.params!.length, 0);
   });
 
   testWidgets("nested compoent test", (tester) async {
@@ -77,12 +77,12 @@ void main() {
     QR.to('/user/5/info');
     await tester.pumpAndSettle();
     expect(QR.currentRoute.fullPath, '/user/5/info');
-    expect(QR.params['userId'], '5');
+    expect(QR.params!['userId'], '5');
     expect(find.byType(WidgetTwo), findsOneWidget);
     expect(find.byType(WidgetOne), findsNothing);
     QR.back();
     await tester.pumpAndSettle();
-    expect(QR.params.length, 0);
+    expect(QR.params!.length, 0);
     expect(find.byType(WidgetOne), findsOneWidget);
     expect(find.byType(WidgetTwo), findsNothing);
   });
@@ -118,13 +118,13 @@ void main() {
     QR.to('/user/5/info/7');
     await tester.pumpAndSettle();
     expect(QR.currentRoute.fullPath, '/user/5/info/7');
-    expect(QR.params['userId'], '5');
-    expect(QR.params['companyId'], '7');
+    expect(QR.params!['userId'], '5');
+    expect(QR.params!['companyId'], '7');
     expect(find.byType(WidgetTwo), findsOneWidget);
     expect(find.byType(WidgetOne), findsNothing);
     QR.back();
     await tester.pumpAndSettle();
-    expect(QR.params.length, 0);
+    expect(QR.params!.length, 0);
     expect(find.byType(WidgetOne), findsOneWidget);
     expect(find.byType(WidgetTwo), findsNothing);
   });

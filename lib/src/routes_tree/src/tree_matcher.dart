@@ -3,25 +3,25 @@ import '../../qr.dart';
 import 'tree_types.dart';
 
 class TreeMatcher {
-  Tree _tree;
-  MatchContext _cureentTree;
+  Tree? _tree;
+  MatchContext? _cureentTree;
 
   // ignore: avoid_setters_without_getters
-  set tree(Tree t) => _tree = t;
+  set tree(Tree? t) => _tree = t;
 
-  MatchContext _getFirstMatch(MatchRoute match) {
-    if (_cureentTree != null && match.route.key == _cureentTree.key) {
+  MatchContext? _getFirstMatch(MatchRoute match) {
+    if (_cureentTree != null && match.route!.key == _cureentTree!.key) {
       return _cureentTree;
     }
 
     if (_cureentTree != null) {
-      _cureentTree.dispoase();
+      _cureentTree!.dispoase();
       _cureentTree = null;
     }
     return match.toMatchContext();
   }
 
-  MatchContext getMatch(String path) {
+  MatchContext? getMatch(String path) {
     path = path.trim();
     QR.log('matching for $path', isDebug: true);
 
@@ -41,9 +41,9 @@ class TreeMatcher {
     final params = Uri.parse(path).queryParametersAll;
     for (var item in params.entries) {
       if (item.value.length == 1) {
-        match.params.addAll({item.key: item.value.first});
+        match.params!.addAll({item.key: item.value.first});
       } else if (item.value.isNotEmpty) {
-        match.params.addAll({item.key: item.value});
+        match.params!.addAll({item.key: item.value});
       }
     }
 
@@ -60,27 +60,27 @@ class TreeMatcher {
     while (routeNode.childMatch != null) {
       final needInit =
           // There is no previus context
-          contextNode.childContext == null ||
+          contextNode!.childContext == null ||
               // This is new child route (it has new key)
-              routeNode.childMatch.route.key != contextNode.childContext.key ||
+              routeNode.childMatch!.route!.key != contextNode.childContext!.key ||
               // It is component (can't compare old route. always create new)
-              routeNode.childMatch.route.isComponent;
+              routeNode.childMatch!.route!.isComponent;
 
       if (needInit) {
         // Be sure to dispose and clean up the old context.
         if (contextNode.childContext != null) {
-          contextNode.childContext.dispoase();
+          contextNode.childContext!.dispoase();
           contextNode.childContext = null;
         }
-        contextNode.childContext = routeNode.childMatch.toMatchContext();
+        contextNode.childContext = routeNode.childMatch!.toMatchContext();
       }
 
-      routeNode = routeNode.childMatch;
+      routeNode = routeNode.childMatch!;
 
       // if there is params update the path on the last child
       // so he can update with new request with new params
-      if (routeNode.childMatch == null && match.params.isNotEmpty) {
-        contextNode.childContext = contextNode.childContext
+      if (routeNode.childMatch == null && match.params!.isNotEmpty) {
+        contextNode.childContext = contextNode.childContext!
             .copyWith(fullPath: path, isComponent: true, isNew: true);
       }
       contextNode = contextNode.childContext;
@@ -95,27 +95,27 @@ class TreeMatcher {
     final newRoute = Uri.parse(path).pathSegments;
 
     // Build Match Base
-    var searchIn = _tree.routes;
+    var searchIn = _tree!.routes;
     final match = MatchRoute.fromTree(
         routes: searchIn, path: newRoute.isEmpty ? '' : newRoute[0]);
     if (!match.found) return _notFound(path);
-    searchIn = match.route.children;
+    searchIn = match.route!.children;
 
     // Build Match Tree
-    var childMatch = match;
+    MatchRoute? childMatch = match;
     for (var i = 1; i < newRoute.length; i++) {
-      childMatch.childMatch =
+      childMatch!.childMatch =
           MatchRoute.fromTree(routes: searchIn, path: newRoute[i]);
-      if (!childMatch.childMatch.found) return _notFound(path);
-      searchIn = childMatch.childMatch.route.children;
+      if (!childMatch.childMatch!.found) return _notFound(path);
+      searchIn = childMatch.childMatch!.route!.children;
       childMatch = childMatch.childMatch;
     }
 
     // Set initRoute `/` if needed
-    if (childMatch.route.hasChidlren) {
+    if (childMatch!.route!.hasChidlren) {
       childMatch.childMatch = MatchRoute.fromTree(routes: searchIn, path: '');
-      if (!childMatch.childMatch.found) return _notFound(path);
-      searchIn = childMatch.childMatch.route.children;
+      if (!childMatch.childMatch!.found) return _notFound(path);
+      searchIn = childMatch.childMatch!.route!.children;
       childMatch = childMatch.childMatch;
     }
 
@@ -125,12 +125,12 @@ class TreeMatcher {
   // Get match object for notFound Page.
   MatchRoute _notFound(String path) {
     QR.currentRoute.fullPath = path;
-    final match = MatchRoute.fromTree(routes: _tree.routes, path: 'notfound');
+    final match = MatchRoute.fromTree(routes: _tree!.routes, path: 'notfound');
     return match;
   }
 
   String findPathFromName(String name, Map<String, dynamic> params) {
-    var path = _tree.treeIndex[name];
+    var path = _tree!.treeIndex[name]!;
     assert(path != null, 'Path name not found');
     final pathParams = <String, dynamic>{};
 
@@ -144,7 +144,7 @@ class TreeMatcher {
     }
 
     // Replace old component
-    for (var param in QR.params.entries) {
+    for (var param in QR.params!.entries) {
       if (path.contains(':${param.key}')) {
         path = path.replaceAll(':${param.key}', param.value.toString());
       }

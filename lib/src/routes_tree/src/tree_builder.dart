@@ -6,7 +6,7 @@ import 'tree_types.dart';
 
 class TreeBuilder {
   List<QRouteInternal> _buildTree(
-      Tree tree, List<QRouteBase> routes, String basePath) {
+      Tree tree, List<QRouteBase>? routes, String basePath) {
     final result = <QRouteInternal>[];
     if (routes == null || routes.isEmpty) return result;
 
@@ -15,7 +15,7 @@ class TreeBuilder {
           ? routebase
           : (routebase as QRouteBuilder).createRoute();
 
-      var path = route.path;
+      var path = route.path!;
       if (!path.startsWith('/')) {
         path = '/$path';
       }
@@ -31,7 +31,9 @@ class TreeBuilder {
         var newRoute = route.copyWith(path: pathSegments.last);
         for (var i = pathSegments.length - 2; i >= 0; i--) {
           newRoute = QRoute(
-              path: pathSegments[i], page: (c) => c, children: [newRoute]);
+              path: pathSegments[i],
+              page: (c) => c ?? Container(),
+              children: [newRoute]);
         }
         path = pathSegments.first;
         route = newRoute;
@@ -44,11 +46,11 @@ class TreeBuilder {
         route: route,
         fullPath: fullPath,
       );
-      tree.treeIndex[route.name ?? _route.fullPath] = fullPath;
+      tree.treeIndex[route.name] = fullPath;
       // Add children default init
       if (route.children != null &&
-          !route.children.any((element) => element.path == '/')) {
-        route.children.add(QRoute(
+          !route.children!.any((element) => element.path == '/')) {
+        route.children!.add(QRoute(
           path: '/',
           name: '${route.name} Init',
           page: (c) => Container(),

@@ -16,7 +16,7 @@ class AppWarpper extends StatelessWidget {
 
 class AppWarpperWithInit extends StatelessWidget {
   final List<QRoute> pages;
-  final String initRoute;
+  final String? initRoute;
   AppWarpperWithInit(this.pages, {this.initRoute});
 
   @override
@@ -24,7 +24,7 @@ class AppWarpperWithInit extends StatelessWidget {
     QR.settings.enableDebugLog = true;
     return MaterialApp.router(
         routeInformationParser: QR.routeParser(),
-        routerDelegate: QR.router(pages, initRoute: initRoute));
+        routerDelegate: QR.router(pages, initRoute: initRoute!));
   }
 }
 

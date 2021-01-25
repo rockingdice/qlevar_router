@@ -2,16 +2,16 @@ import 'package:flutter/widgets.dart';
 
 class QRouter extends Router {
   QRouter({
-    Key key,
-    RouterDelegate routerDelegate,
-    BackButtonDispatcher backButtonDispatcher,
+    Key? key,
+    required RouterDelegate routerDelegate,
+    BackButtonDispatcher? backButtonDispatcher,
   }) : super(
             key: key,
             routerDelegate: routerDelegate,
             backButtonDispatcher: backButtonDispatcher);
 }
 
-typedef QRoutePage = Widget Function(QRouter);
+typedef QRoutePage = Widget Function(QRouter?);
 typedef RedirectGuard = String Function(String);
 
 /// Create new route.
@@ -27,15 +27,15 @@ typedef RedirectGuard = String Function(String);
 /// [children] the children of this route.
 class QRoute extends QRouteBase {
   final String name;
-  final QRoutePage page;
-  final RedirectGuard redirectGuard;
-  final Function onInit;
-  final Function onDispose;
-  final List<QRouteBase> children;
+  final QRoutePage? page;
+  final RedirectGuard? redirectGuard;
+  final Function? onInit;
+  final Function? onDispose;
+  final List<QRouteBase>? children;
 
   QRoute(
-      {String name,
-      String path,
+      {String? name,
+      required String path,
       this.page,
       this.onInit,
       this.onDispose,
@@ -47,17 +47,17 @@ class QRoute extends QRouteBase {
         super(path);
 
   QRoute copyWith({
-    String name,
-    String path,
-    QRoutePage page,
-    RedirectGuard redirectGuard,
-    Function onInit,
-    Function onDispose,
-    List<QRoute> children,
+    String? name,
+    String? path,
+    QRoutePage? page,
+    RedirectGuard? redirectGuard,
+    Function? onInit,
+    Function? onDispose,
+    List<QRoute>? children,
   }) =>
       QRoute(
         name: name ?? this.name,
-        path: path ?? this.path,
+        path: path ?? this.path!,
         page: page ?? this.page,
         redirectGuard: redirectGuard ?? this.redirectGuard,
         onInit: onInit ?? this.onInit,
@@ -67,13 +67,13 @@ class QRoute extends QRouteBase {
 }
 
 abstract class QRouteBase {
-  final String path;
+  final String? path;
   QRouteBase(this.path);
 }
 
 /// Create a [QRoute]
 // ignore: one_member_abstracts
 abstract class QRouteBuilder extends QRouteBase {
-  QRouteBuilder({String path}) : super(path);
+  QRouteBuilder({String? path}) : super(path);
   QRoute createRoute();
 }

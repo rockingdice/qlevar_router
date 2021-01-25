@@ -13,28 +13,28 @@ class QRController {
   void setTree(List<QRouteBase> routes) => _routesTree.buildTree(routes);
 
   QRouterDelegate createDelegate(String initRoute) {
-    final match = _getMatch(initRoute);
+    final match = _getMatch(initRoute)!;
     match.treeUpdated();
     return QRouterDelegate(
         _controller.createRouterController(-1, 'Root', match));
   }
 
-  void toPath(String path, QNavigationMode mode) {
-    final match = _getMatch(path);
+  void toPath(String path, QNavigationMode? mode) {
+    final match = _getMatch(path)!;
     setNewMatch(match, mode);
   }
 
-  void toName(String name, Map<String, dynamic> params, QNavigationMode mode) {
-    final match = _routesTree.getNamedMatch(name, params);
+  void toName(String name, Map<String, dynamic> params, QNavigationMode? mode) {
+    final match = _routesTree.getNamedMatch(name, params)!;
     setNewMatch(match, mode);
   }
 
   bool pop() => _controller.pop();
 
-  void setNewMatch(MatchContext match, QNavigationMode mode) =>
+  void setNewMatch(MatchContext match, QNavigationMode? mode) =>
       _controller.setNewMatch(match, mode);
 
-  MatchContext _getMatch(String path) {
+  MatchContext? _getMatch(String path) {
     if (!path.startsWith('/')) {
       path = '/$path';
     }

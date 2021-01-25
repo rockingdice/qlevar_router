@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
 abstract class QPage extends Page {
-  final int matchKey;
+  final int? matchKey;
 
   QPage(this.matchKey);
 }
 
 class QMaterialPage extends MaterialPage implements QPage {
-  final int _key;
+  final int? _key;
   QMaterialPage({
-    Widget child,
+    required Widget child,
     bool maintainState = true,
     bool fullscreenDialog = false,
-    int key,
-    String name,
-    Object arguments,
+    int? key,
+    String? name,
+    Object? arguments,
   })  : _key = key,
         super(
             child: child,
@@ -25,5 +25,5 @@ class QMaterialPage extends MaterialPage implements QPage {
             arguments: arguments);
 
   @override
-  int get matchKey => _key;
+  int? get matchKey => _key;
 }

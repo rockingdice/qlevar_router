@@ -7,11 +7,11 @@ class Tree {
 }
 
 class QRouteInternal {
-  final int key;
-  final String path;
-  final String fullPath;
+  final int? key;
+  final String? path;
+  final String? fullPath;
   final bool isComponent;
-  final QRoute route;
+  final QRoute? route;
   final List<QRouteInternal> children = [];
 
   QRouteInternal({
@@ -22,9 +22,9 @@ class QRouteInternal {
     this.isComponent = false,
   });
 
-  String get name => route?.name;
+  String? get name => route?.name;
 
-  QRouteInternal copyWith({String path, String fullPath}) {
+  QRouteInternal copyWith({String? path, String? fullPath}) {
     final result = QRouteInternal(
         key: key,
         path: path ?? this.path,
@@ -55,10 +55,10 @@ class QRouteInternal {
 }
 
 class MatchRoute {
-  final QRouteInternal route;
+  final QRouteInternal? route;
   final bool found;
-  final Map<String, dynamic> params;
-  MatchRoute childMatch;
+  final Map<String, dynamic>? params;
+  MatchRoute? childMatch;
 
   MatchRoute({
     this.route,
@@ -70,9 +70,9 @@ class MatchRoute {
   factory MatchRoute.notFound() => MatchRoute(found: false);
 
   factory MatchRoute.fromTree(
-      {List<QRouteInternal> routes, String path, String childInit}) {
+      {required List<QRouteInternal> routes, String? path, String? childInit}) {
     if (routes.isEmpty) {
-      return null;
+      return MatchRoute.notFound();
     }
     if (!routes.any((route) => route.path == path || route.isComponent)) {
       return MatchRoute.notFound();
@@ -83,10 +83,10 @@ class MatchRoute {
     QRouteInternal match;
     if (matchs.isEmpty) {
       matchs = routes.where((route) => route.isComponent);
-      final component = matchs.first.path.substring(1);
+      final component = matchs.first.path!.substring(1);
       params.addAll({component: path});
       final fullPath =
-          matchs.first.fullPath.replaceAll(matchs.first.path, path);
+          matchs.first.fullPath!.replaceAll(matchs.first.path!, path!);
       match = matchs.first.copyWith(path: path, fullPath: fullPath);
     } else {
       match = matchs.first;
@@ -94,33 +94,33 @@ class MatchRoute {
     return MatchRoute(route: match, params: params);
   }
 
-  MatchContext toMatchContext({MatchContext childContext}) => MatchContext(
-      route: route.route,
-      isComponent: route.isComponent,
-      key: route.key,
-      fullPath: route.fullPath,
+  MatchContext toMatchContext({MatchContext? childContext}) => MatchContext(
+      route: route!.route,
+      isComponent: route!.isComponent,
+      key: route!.key,
+      fullPath: route!.fullPath,
       childContext: childContext);
 
-  Map<String, dynamic> getParames() {
+  Map<String, dynamic>? getParames() {
     final result = params;
     if (childMatch != null) {
-      result.addAll(childMatch.getParames());
+      result!.addAll(childMatch!.getParames()!);
     }
     return result;
   }
 
-  String checkRedirect(String path) {
-    final redirect = route.route.redirectGuard == null
+  String? checkRedirect(String path) {
+    final redirect = route!.route!.redirectGuard == null
         ? null
-        : route.route.redirectGuard(path);
+        : route!.route!.redirectGuard!(path);
     return redirect != null
         ? redirect
         : childMatch == null
             ? null
-            : childMatch.checkRedirect(path);
+            : childMatch!.checkRedirect(path);
   }
 
   @override
   String toString() =>
-      'key: ${route.key}, name: ${route.route.name} found: $found';
+      'key: ${route!.key}, name: ${route!.route!.name} found: $found';
 }

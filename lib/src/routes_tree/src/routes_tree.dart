@@ -6,7 +6,7 @@ import 'tree_matcher.dart';
 import 'tree_types.dart';
 
 class RoutesTree {
-  Tree _tree;
+  Tree? _tree;
   final _matcher = TreeMatcher();
 
   void buildTree(List<QRouteBase> routes) {
@@ -17,11 +17,11 @@ class RoutesTree {
     QR.log('Tree Built', isDebug: true);
   }
 
-  MatchContext getMatch(String path) {
+  MatchContext? getMatch(String path) {
     return _matcher.getMatch(path);
   }
 
-  MatchContext getNamedMatch(String name, Map<String, dynamic> params) {
+  MatchContext? getNamedMatch(String name, Map<String, dynamic> params) {
     return _matcher.getMatch(_matcher.findPathFromName(name, params));
   }
 }

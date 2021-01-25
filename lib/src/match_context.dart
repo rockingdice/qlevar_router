@@ -3,12 +3,12 @@ import 'types.dart';
 
 /// The match context tree for a route.
 class MatchContext {
-  final int key;
-  final QRoute route;
-  final String fullPath;
-  final bool isComponent;
+  final int? key;
+  final QRoute? route;
+  final String? fullPath;
+  final bool? isComponent;
   bool isNew;
-  MatchContext childContext;
+  MatchContext? childContext;
 
   MatchContext(
       {this.key,
@@ -20,12 +20,12 @@ class MatchContext {
       bool isCopy = false}) {
     // Run onInit for the new match.
     if (!isCopy && route?.onInit != null) {
-      QR.log('Run onInit for ${route.name}', isDebug: true);
-      route.onInit.call();
+      QR.log('Run onInit for ${route!.name}', isDebug: true);
+      route!.onInit!.call();
     }
   }
 
-  MatchContext copyWith({String fullPath, bool isComponent, bool isNew}) =>
+  MatchContext copyWith({String? fullPath, bool? isComponent, bool? isNew}) =>
       MatchContext(
           key: key,
           fullPath: fullPath ?? this.fullPath,
@@ -38,21 +38,21 @@ class MatchContext {
   void treeUpdated() {
     isNew = false;
     if (childContext != null) {
-      childContext.treeUpdated();
+      childContext!.treeUpdated();
     }
   }
 
   void dispoase() {
     if (route?.onDispose != null) {
-      QR.log('Run onDispose for ${route.name}', isDebug: true);
-      route.onDispose.call();
+      QR.log('Run onDispose for ${route!.name}', isDebug: true);
+      route!.onDispose!.call();
     }
     if (childContext != null) {
-      childContext.dispoase();
+      childContext!.dispoase();
       childContext = null;
     }
   }
 
   @override
-  String toString() => 'Key: $key, path: $fullPath, Name: ${route.name}';
+  String toString() => 'Key: $key, path: $fullPath, Name: ${route!.name}';
 }
