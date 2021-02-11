@@ -8,6 +8,7 @@ abstract class QPage extends Page {
 
 class QMaterialPage extends MaterialPage implements QPage {
   final int? _key;
+
   QMaterialPage({
     required Widget child,
     bool maintainState = true,
@@ -26,4 +27,17 @@ class QMaterialPage extends MaterialPage implements QPage {
 
   @override
   int? get matchKey => _key;
+
+  @override
+  Route createRoute(BuildContext context) {
+    return PageRouteBuilder(
+      settings: this,
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      },
+    );
+  }
 }

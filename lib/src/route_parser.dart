@@ -3,18 +3,18 @@ import 'package:flutter/widgets.dart';
 import 'qr.dart';
 
 /// The parser for QRouter
-class QRouteInformationParser extends RouteInformationParser<String?> {
+class QRouteInformationParser extends RouteInformationParser<String> {
   const QRouteInformationParser();
   @override
-  Future<String?> parseRouteInformation(
+  Future<String> parseRouteInformation(
       RouteInformation routeInformation) async {
     if (routeInformation.location == null) {
-      return SynchronousFuture(null);
+      return SynchronousFuture("/");
     }
-    return routeInformation.location;
+    return routeInformation.location ?? "/";
   }
 
   @override
-  RouteInformation restoreRouteInformation(String? match) =>
+  RouteInformation restoreRouteInformation(String match) =>
       RouteInformation(location: QR.currentRoute.fullPath);
 }
